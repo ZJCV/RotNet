@@ -21,7 +21,7 @@ if __name__ == '__main__':
     cfg.merge_from_file('configs/mobilenet_v2_fashion_mnish.yaml')
     cfg.freeze()
 
-    epoches = 10
+    epoches = cfg.LR_SCHEDULER.EPOCHES
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     transform, target_transform = build_train_transform()
@@ -31,8 +31,8 @@ if __name__ == '__main__':
 
     criterion = build_criterion(cfg)
     model = build_model(cfg).to(device)
-    optimizer = build_optimizer(model)
-    lr_scheduler = build_lr_scheduler(optimizer)
+    optimizer = build_optimizer(cfg, model)
+    lr_scheduler = build_lr_scheduler(cfg, optimizer)
 
     output_dir = './outputs'
     if not os.path.exists(output_dir):

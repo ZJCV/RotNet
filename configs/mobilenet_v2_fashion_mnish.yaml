@@ -5,3 +5,12 @@ MODEL:
   PRETRAINED: True
 CRITERION:
   NAME: 'crossentropy'
+OPTIMIZER:
+  NAME: 'sgd'
+  LR: 1e-3
+  WEIGHT_DECAY: 3e-4
+  MOMENTUM: 0.9
+LR_SCHEDULER:
+  EPOCHES: 10
+  NAME: 'step_lr'
+  STEP_SIZE: 3

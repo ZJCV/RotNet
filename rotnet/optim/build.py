@@ -7,13 +7,21 @@
 @description: 
 """
 
+import torch.nn as nn
 import torch.optim as optim
+from torch.optim.optimizer import Optimizer
+
+from . import registry
+from .lr_schedulers.step_lr import build_step_lr
+from .optimizers.sgd import build_sgd
+from .optimizers.adam import build_adam
 
 
-def build_optimizer(model):
-    return optim.SGD(model.parameters(), lr=1e-3, momentum=0.9, weight_decay=3e-4)
-    # return optim.Adam(model.parameters(), lr=1e-6, weight_decay=1e-6)
+def build_optimizer(cfg, model):
+    assert isinstance(model, nn.Module)
+    return registry.OPTIMIZERS[cfg.OPTIMIZER.NAME](cfg, model)
 
 
-def build_lr_scheduler(optimizer):
-    return optim.lr_scheduler.StepLR(optimizer, step_size=3)
+def build_lr_scheduler(cfg, optimizer):
+    assert isinstance(optimizer, Optimizer)
+    return registry.LR_SCHEDULERS[cfg.LR_SCHEDULER.NAME](cfg, optimizer)
