@@ -14,7 +14,7 @@ from .rotate import Rotate
 from .mnist import FMNIST
 
 
-def build_transform():
+def build_train_transform():
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),
@@ -28,6 +28,18 @@ def build_transform():
     target_transform = Rotate()
 
     return transform, target_transform
+
+
+def build_test_transform():
+    transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.Resize((224, 224)),
+        transforms.Grayscale(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5), (0.5)),
+    ])
+
+    return transform
 
 
 def build_dataset(data_dir, transform=None, target_transform=None):

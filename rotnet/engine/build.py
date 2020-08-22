@@ -12,11 +12,15 @@ import copy
 import torch
 
 from rotnet.util.metrics import topk_accuracy
+from rotnet.util.logger import setup_logger
 
 
-def train_model(model_name, model, criterion, optimizer, lr_scheduler, data_loaders, data_sizes,
+def train_model(model_name, model, criterion, optimizer, lr_scheduler, data_loaders, data_sizes, checkpointer,
                 epoches=100, device=None):
     since = time.time()
+
+    logger = setup_logger("RotNet")
+    logger.info("Start training ...")
 
     best_model_weights = copy.deepcopy(model.state_dict())
     best_acc = 0.0
@@ -24,8 +28,8 @@ def train_model(model_name, model, criterion, optimizer, lr_scheduler, data_load
     loss_dict = {'train': [], 'test': []}
     acc_dict = {'train': [], 'test': []}
     for epoch in range(epoches):
-        print('{} - Epoch {}/{}'.format(model_name, epoch, epoches - 1))
-        print('-' * 10)
+        logger.info('{} - Epoch {}/{}'.format(model_name, epoch, epoches - 1))
+        logger.info('-' * 10)
 
         # Each epoch has a training and test phase
         for phase in ['train', 'test']:
@@ -74,7 +78,7 @@ def train_model(model_name, model, criterion, optimizer, lr_scheduler, data_load
             loss_dict[phase].append(epoch_loss)
             acc_dict[phase].append(epoch_acc)
 
-            print('{} Loss: {:.4f} Top-1 Acc: {:.4f}'.format(
+            logger.info('{} Loss: {:.4f} Top-1 Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
 
             # deep copy the model
@@ -83,12 +87,11 @@ def train_model(model_name, model, criterion, optimizer, lr_scheduler, data_load
                 best_model_weights = copy.deepcopy(model.state_dict())
 
         # 每训练一轮就保存
-        # util.save_model(model.cpu(), '../data/models/%s_%d.pth' % (model_name, epoch))
-        # model = model.to(device)
+        checkpointer.save("model_{:06d}".format(epoch))
 
     time_elapsed = time.time() - since
-    print('Training {} complete in {:.0f}m {:.0f}s'.format(model_name, time_elapsed // 60, time_elapsed % 60))
-    print('Best test Top-1 Acc: {:4f}'.format(best_acc))
+    logger.info('Training {} complete in {:.0f}m {:.0f}s'.format(model_name, time_elapsed // 60, time_elapsed % 60))
+    logger.info('Best test Top-1 Acc: {:4f}'.format(best_acc))
 
     # load best model weights
     model.load_state_dict(best_model_weights)
