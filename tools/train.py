@@ -15,8 +15,12 @@ from rotnet.model.build import build_model, build_criterion
 from rotnet.optim.build import build_optimizer, build_lr_scheduler
 from rotnet.engine.build import train_model
 from rotnet.util.checkpoint import CheckPointer
+from rotnet.config import cfg
 
 if __name__ == '__main__':
+    cfg.merge_from_file('configs/mobilenet_v2_fashion_mnish.yaml')
+    cfg.freeze()
+
     epoches = 10
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -26,7 +30,7 @@ if __name__ == '__main__':
     data_loaders = build_dataloader(data_sets)
 
     criterion = build_criterion()
-    model = build_model(num_classes=360).to(device)
+    model = build_model(cfg).to(device)
     optimizer = build_optimizer(model)
     lr_scheduler = build_lr_scheduler(optimizer)
 
