@@ -50,7 +50,7 @@ def train_model(model_name, model, criterion, optimizer, lr_scheduler, data_load
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
                     # print(outputs.shape)
-                    # _, preds = torch.max(outputs, 1)
+                    _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
                     # compute top-k accuray
@@ -64,7 +64,7 @@ def train_model(model_name, model, criterion, optimizer, lr_scheduler, data_load
 
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
-                # running_corrects += torch.sum(preds == labels.data)
+                # print(f'loss: {running_loss}, acc: {running_acc}')
             if phase == 'train':
                 lr_scheduler.step()
 
