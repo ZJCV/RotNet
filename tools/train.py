@@ -29,7 +29,7 @@ if __name__ == '__main__':
     data_sets, data_sizes = build_dataset(data_dir, transform, target_transform)
     data_loaders = build_dataloader(data_sets)
 
-    criterion = build_criterion()
+    criterion = build_criterion(cfg)
     model = build_model(cfg).to(device)
     optimizer = build_optimizer(model)
     lr_scheduler = build_lr_scheduler(optimizer)

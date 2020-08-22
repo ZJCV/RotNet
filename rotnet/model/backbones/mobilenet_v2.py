@@ -10,10 +10,10 @@
 import torch.nn as nn
 from torchvision.models import mobilenet_v2
 
-from . import registry
+from rotnet.model import registry
 
 
-@registry.MODELS.register('mobilenet_v2')
+@registry.BACKBONES.register('mobilenet_v2')
 def build_mobilenet_v2(cfg):
     in_features = cfg.MODEL.IN_FEATURES
     num_classes = cfg.MODEL.NUM_CLASSES

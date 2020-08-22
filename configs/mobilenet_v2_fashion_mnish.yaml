@@ -3,3 +3,5 @@ MODEL:
   IN_FEATURES: 1
   NUM_CLASSES: 360
   PRETRAINED: True
+CRITERION:
+  NAME: 'crossentropy'
