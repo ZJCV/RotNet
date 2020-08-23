@@ -2,55 +2,45 @@
 
 """
 @date: 2020/8/21 下午7:20
-@file: build.py
+@file: trainer.py
 @author: zj
 @description: 
 """
 
+import torch
 from torch.utils.data import DataLoader
-import torchvision.transforms as transforms
 
-from .rotate import Rotate
-from .mnist import FMNIST
-
-
-def build_train_transform():
-    transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),
-        transforms.Grayscale(),
-        # transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.5), (0.5)),
-        transforms.RandomErasing()
-    ])
-
-    target_transform = Rotate()
-
-    return transform, target_transform
+from .transforms.build import build_transform
+from .datasets.build import build_dataset
+from .samplers import IterationBasedBatchSampler
 
 
-def build_test_transform():
-    transform = transforms.Compose([
-        transforms.ToPILImage(),
-        transforms.Resize((224, 224)),
-        transforms.Grayscale(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.5), (0.5)),
-    ])
+def build_dataloader(cfg, train=True):
+    transform, target_transform = build_transform(cfg, train=train)
+    dataset_list = cfg.DATASETS.TRAIN if train else cfg.DATASETS.TEST
+    datasets = build_dataset(dataset_list,
+                             transform=transform, target_transform=target_transform, is_train=train)
 
-    return transform
+    data_loaders = []
 
+    for dataset in datasets:
+        if train:
+            # 训练阶段使用随机采样器
+            sampler = torch.utils.data.RandomSampler(dataset)
+            batch_size = cfg.DATALOADER.TRAIN_BATCH_SIZE
+        else:
+            sampler = torch.utils.data.sampler.SequentialSampler(dataset)
+            batch_size = cfg.DATALOADER.TEST_BATCH_SIZE
 
-def build_dataset(data_dir, transform=None, target_transform=None):
-    train_dataset = FMNIST(data_dir, download=True, train=True, transform=transform, target_transform=target_transform)
-    test_dataset = FMNIST(data_dir, download=True, train=False, transform=transform, target_transform=target_transform)
+        batch_sampler = torch.utils.data.sampler.BatchSampler(sampler=sampler, batch_size=batch_size, drop_last=False)
+        if train:
+            batch_sampler = IterationBasedBatchSampler(batch_sampler, num_iterations=cfg.TRAIN.MAX_ITER, start_iter=0)
 
-    return {'train': train_dataset, 'test': test_dataset}, {'train': len(train_dataset), 'test': len(test_dataset)}
-
-
-def build_dataloader(data_sets):
-    train_dataloader = DataLoader(data_sets['train'], batch_size=128, shuffle=True, num_workers=8)
-    test_dataloader = DataLoader(data_sets['test'], batch_size=128, shuffle=True, num_workers=8)
-
-    return {'train': train_dataloader, 'test': test_dataloader}
+        data_loader = DataLoader(dataset, num_workers=cfg.DATALOADER.NUM_WORKERS, batch_sampler=batch_sampler,
+                                 pin_memory=True)
+        data_loaders.append(data_loader)
+    if train:
+        # during training, a single (possibly concatenated) data_loader is returned
+        assert len(data_loaders) == 1
+        return data_loaders[0]
+    return data_loaders

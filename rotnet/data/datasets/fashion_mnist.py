@@ -2,7 +2,7 @@
 
 """
 @date: 2020/8/22 上午11:09
-@file: mnist.py
+@file: fashion_mnist.py
 @author: zj
 @description: 
 """
@@ -14,8 +14,8 @@ from torchvision.datasets import FashionMNIST
 
 class FMNIST(FashionMNIST):
 
-    def __init__(self, root, train=True, transform=None, target_transform=None, download=False):
-        super().__init__(root, train, transform, target_transform, download)
+    def __init__(self, data_dir, train=True, transform=None, target_transform=None, download=True):
+        super().__init__(data_dir, train, transform, target_transform, download)
 
     def __getitem__(self, index):
         """
@@ -42,10 +42,3 @@ class FMNIST(FashionMNIST):
 
         # print(img.shape, target)
         return img, target
-
-
-if __name__ == '__main__':
-    dataset = FMNIST('../../data/', train=True)
-    img, target = dataset.__getitem__(10)
-    print(np.array(img).shape)
-    print(target)

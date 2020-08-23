@@ -2,13 +2,13 @@
 
 """
 @date: 2020/8/21 下午7:30
-@file: build.py
+@file: trainer.py
 @author: zj
 @description: 
 """
 
 from . import registry
-from .backbones.mobilenet_v2 import build_mobilenet_v2
+from .models.mobilenet_v2 import build_mobilenet_v2
 from .criterions.crossentropy import build_crossentropy
 
 

@@ -7,6 +7,8 @@ def setup_logger(name, save_dir=None):
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
 
+    logger.propagate = False
+
     stream_handler = logging.StreamHandler(stream=sys.stdout)
     stream_handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")

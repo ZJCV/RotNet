@@ -2,7 +2,7 @@
 
 """
 @date: 2020/8/21 下午7:55
-@file: build.py
+@file: trainer.py
 @author: zj
 @description: 
 """

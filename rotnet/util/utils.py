@@ -1,27 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """
-@date: 2020/8/22 上午11:14
-@file: rotate.py
+@date: 2020/8/23 下午6:50
+@file: utils.py
 @author: zj
 @description: 
 """
 
 import math
-import random
 import cv2
-import numpy as np
-
-
-class Rotate:
-
-    def __call__(self, img: np.ndarray):
-        assert isinstance(img, np.ndarray)
-
-        angle = random.randint(0, 359)
-        rotate_img = rotate(img, angle)
-
-        return rotate_img, angle
 
 
 def rotate(img, degree):
