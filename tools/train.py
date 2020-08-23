@@ -11,6 +11,7 @@ import os
 import torch
 import argparse
 
+from rotnet.config import cfg
 from rotnet.data.build import build_dataloader
 from rotnet.model.build import build_model, build_criterion
 from rotnet.optim.build import build_optimizer, build_lr_scheduler
@@ -18,7 +19,7 @@ from rotnet.engine.trainer import do_train
 from rotnet.engine.inference import do_evaluation
 from rotnet.util.checkpoint import CheckPointer
 from rotnet.util.logger import setup_logger
-from rotnet.config import cfg
+from rotnet.util.collect_env import collect_env_info
 
 
 def train(cfg, device):
@@ -77,6 +78,7 @@ def main():
     logger = setup_logger("RotNet", save_dir=cfg.OUTPUT.DIR)
     logger.info(args)
 
+    logger.info("Environment info:\n" + collect_env_info())
     logger.info("Loaded configuration file {}".format(args.config_file))
     with open(args.config_file, "r") as cf:
         config_str = "\n" + cf.read()
