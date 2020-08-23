@@ -2,11 +2,12 @@
 
 """
 @date: 2020/8/22 下午4:20
-@file: predict.py
+@file: demo.py
 @author: zj
 @description: 
 """
 
+import cv2
 import glob
 import os
 import time
@@ -18,68 +19,59 @@ import argparse
 import numpy as np
 
 from rotnet.config import cfg
+from rotnet.model.build import build_model
+from rotnet.data.transforms.build import build_transform
+from rotnet.util.checkpoint import CheckPointer
+from rotnet.util.utils import rotate
 
 
 @torch.no_grad()
-def run_demo(cfg, ckpt, score_threshold, images_dir, output_dir, dataset_type):
-    if dataset_type == "voc":
-        class_names = VOCDataset.class_names
-    elif dataset_type == 'coco':
-        class_names = COCODataset.class_names
-    else:
-        raise NotImplementedError('Not implemented now.')
-    device = torch.device(cfg.MODEL.DEVICE)
+def run_demo(cfg, ckpt, images_dir, output_dir):
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    model = build_detection_model(cfg)
-    model = model.to(device)
-    checkpointer = CheckPointer(model, save_dir=cfg.OUTPUT_DIR)
+    model = build_model(cfg).to(device)
+    checkpointer = CheckPointer(model, save_dir=cfg.OUTPUT.DIR)
     checkpointer.load(ckpt, use_latest=ckpt is None)
     weight_file = ckpt if ckpt else checkpointer.get_checkpoint_file()
     print('Loaded weights from {}'.format(weight_file))
 
     image_paths = glob.glob(os.path.join(images_dir, '*.jpg'))
-    mkdir(output_dir)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
     cpu_device = torch.device("cpu")
-    transforms = build_transforms(cfg, is_train=False)
+    transform, _ = build_transform(cfg, train=False)
+
     model.eval()
     for i, image_path in enumerate(image_paths):
         start = time.time()
         image_name = os.path.basename(image_path)
 
-        image = np.array(Image.open(image_path).convert("RGB"))
-        height, width = image.shape[:2]
-        images = transforms(image)[0].unsqueeze(0)
+        image = Image.open(image_path)
+        images = transform(image).unsqueeze(0)
         load_time = time.time() - start
 
         start = time.time()
-        result = model(images.to(device))[0]
+        outputs = model(images.to(device))[0].to(cpu_device).numpy()
+        pred_angle = np.argmax(outputs)
         inference_time = time.time() - start
 
-        result = result.resize((width, height)).to(cpu_device).numpy()
-        boxes, labels, scores = result['boxes'], result['labels'], result['scores']
-
-        # 置信度阈值
-        indices = scores > score_threshold
-        boxes = boxes[indices]
-        labels = labels[indices]
-        scores = scores[indices]
         meters = ' | '.join(
             [
-                'objects {:02d}'.format(len(boxes)),
                 'load {:03d}ms'.format(round(load_time * 1000)),
                 'inference {:03d}ms'.format(round(inference_time * 1000)),
-                'FPS {}'.format(round(1.0 / inference_time))
+                f'predicted angle: {pred_angle}'
             ]
         )
         print('({:04d}/{:04d}) {}: {}'.format(i + 1, len(image_paths), image_name, meters))
 
-        drawn_image = draw_boxes(image, boxes, labels, scores, class_names).astype(np.uint8)
-        Image.fromarray(drawn_image).save(os.path.join(output_dir, image_name))
+        res_img = rotate(cv2.imread(image_path, cv2.IMREAD_UNCHANGED), -1 * pred_angle)
+        res_img_path = os.path.join(output_dir, f'{image_name}.jpg')
+        cv2.imwrite(res_img_path, res_img)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="RotNet Predict")
+    parser = argparse.ArgumentParser(description="RotNet Demo.")
     parser.add_argument(
         "--config-file",
         default="",
@@ -88,12 +80,9 @@ def main():
         type=str,
     )
     parser.add_argument("--ckpt", type=str, default=None, help="Trained weights.")
-    parser.add_argument("--score_threshold", type=float, default=0.7)
     parser.add_argument("--images_dir", default='demo', type=str, help='Specify a image dir to do prediction.')
     parser.add_argument("--output_dir", default='demo/result', type=str,
-                        help='Specify a image dir to save predicted images.')
-    parser.add_argument("--dataset_type", default="voc", type=str,
-                        help='Specify dataset type. Currently support voc and coco.')
+                        help='Specify a image dir to save demo images.')
 
     parser.add_argument(
         "opts",
@@ -116,10 +105,8 @@ def main():
 
     run_demo(cfg=cfg,
              ckpt=args.ckpt,
-             score_threshold=args.score_threshold,
              images_dir=args.images_dir,
-             output_dir=args.output_dir,
-             dataset_type=args.dataset_type)
+             output_dir=args.output_dir)
 
 
 if __name__ == '__main__':
