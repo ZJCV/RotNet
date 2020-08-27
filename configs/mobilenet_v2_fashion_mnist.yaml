@@ -13,5 +13,5 @@ OPTIMIZER:
   WEIGHT_DECAY: 3e-4
   MOMENTUM: 0.9
 LR_SCHEDULER:
-  NAME: 'step_lr'
-  STEP_SIZE: 2500
+  NAME: 'multistep_lr'
+  STEP_SIZE: [2500, 6000]
