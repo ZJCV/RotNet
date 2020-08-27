@@ -49,6 +49,7 @@ _C.OPTIMIZER.MOMENTUM = 0.9
 # ---------------------------------------------------------------------------- #
 _C.LR_SCHEDULER = CN()
 _C.LR_SCHEDULER.NAME = 'step_lr'
+_C.LR_SCHEDULER.GAMMA = 0.1
 # for SteLR
 _C.LR_SCHEDULER.STEP_SIZE = 400
 # for MultiStepLR

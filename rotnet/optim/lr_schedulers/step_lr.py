@@ -18,5 +18,6 @@ def build_step_lr(cfg, optimizer):
     assert isinstance(optimizer, Optimizer)
 
     step_size = cfg.LR_SCHEDULER.STEP_SIZE
+    gamma = cfg.LR_SCHEDULER.GAMMA
 
-    return optim.lr_scheduler.StepLR(optimizer, step_size=step_size)
+    return optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)

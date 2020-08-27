@@ -11,6 +11,7 @@ import os
 import numpy as np
 from tqdm import tqdm
 import torch
+import logging
 
 from rotnet.data.build import build_dataloader
 from rotnet.util.logger import setup_logger
@@ -42,7 +43,7 @@ def compute_on_dataset(model, data_loader, device):
 
 def inference(cfg, model, data_loader, dataset_name, device):
     dataset = data_loader.dataset
-    logger = setup_logger(cfg.TEST.NAME)
+    logger = logging.getLogger(cfg.TEST.NAME)
     logger.info("Evaluating {} dataset({} images):".format(dataset_name, len(dataset)))
     results_dict, acc_dict, total_error_distance = compute_on_dataset(model, data_loader, device)
     # print(results_dict)
@@ -51,6 +52,9 @@ def inference(cfg, model, data_loader, dataset_name, device):
     acc_num = np.sum(list(acc_dict.values()))
     logger.info('acc rate: {:.3f}, avg error distance: {:.3f}'.format(
         1.0 * acc_num / total_num, 1.0 * total_error_distance / total_num))
+
+    for handler in logger.handlers:
+        logger.removeHandler(handler)
 
 
 @torch.no_grad()
