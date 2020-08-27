@@ -51,13 +51,15 @@ _C.LR_SCHEDULER = CN()
 _C.LR_SCHEDULER.NAME = 'step_lr'
 # for SteLR
 _C.LR_SCHEDULER.STEP_SIZE = 400
+# for MultiStepLR
+_C.LR_SCHEDULER.MILESTONES = [2500, 6000]
 
 # ---------------------------------------------------------------------------- #
 # DataSets
 # ---------------------------------------------------------------------------- #
 _C.DATASETS = CN()
-_C.DATASETS.TRAIN = ['fashion-mnist']
-_C.DATASETS.TEST = ['fashion-mnist']
+_C.DATASETS.TRAIN = ['FashionMNIST']
+_C.DATASETS.TEST = ['FashionMNIST']
 
 # ---------------------------------------------------------------------------- #
 # DataLoader
@@ -71,4 +73,4 @@ _C.DATALOADER.NUM_WORKERS = 8
 # Output
 # ---------------------------------------------------------------------------- #
 _C.OUTPUT = CN()
-_C.OUTPUT.DIR = 'outputs'
+_C.OUTPUT.DIR = 'outputs/mobilenetv2'

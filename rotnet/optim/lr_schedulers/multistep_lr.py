@@ -10,7 +10,7 @@
 import torch.optim as optim
 from torch.optim.optimizer import Optimizer
 
-from c3d.optim import registry
+from rotnet.optim import registry
 
 
 @registry.LR_SCHEDULERS.register('multistep_lr')

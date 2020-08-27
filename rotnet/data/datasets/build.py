@@ -10,10 +10,14 @@
 from torch.utils.data import ConcatDataset
 
 from rotnet.config.path_catalog import DatasetCatalog
-from .fashion_mnist import FMNIST
+from .fashion_mnist import FashionMNIST
+from .cifar10 import CIFAR10
+from .cifar100 import CIFAR100
 
 _DATASETS = {
-    'FashionMNIST': FMNIST,
+    'FashionMNIST': FashionMNIST,
+    'CIFAR10': CIFAR10,
+    'CIFAR100': CIFAR100
 }
 
 

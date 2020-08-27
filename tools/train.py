@@ -67,13 +67,15 @@ def main():
         torch.backends.cudnn.benchmark = True
 
     cfg.merge_from_file(args.config_file)
+    cfg.merge_from_list(args.opts)
+
     cfg.TRAIN.LOG_STEP = args.log_step
     cfg.TRAIN.SAVE_STEP = args.save_step
     cfg.TRAIN.EVAL_STEP = args.eval_step
     cfg.freeze()
 
-    if not cfg.OUTPUT.DIR:
-        os.mkdir(cfg.OUTPUT.DIR)
+    if not os.path.exists(cfg.OUTPUT.DIR):
+        os.makedirs(cfg.OUTPUT.DIR)
 
     logger = setup_logger("RotNet", save_dir=cfg.OUTPUT.DIR)
     logger.info(args)

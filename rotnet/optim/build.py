@@ -13,6 +13,7 @@ from torch.optim.optimizer import Optimizer
 
 from . import registry
 from .lr_schedulers.step_lr import build_step_lr
+from .lr_schedulers.multistep_lr import build_multistep_lr
 from .optimizers.sgd import build_sgd
 from .optimizers.adam import build_adam
 

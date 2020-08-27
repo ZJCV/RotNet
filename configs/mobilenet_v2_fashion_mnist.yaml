@@ -1,5 +1,7 @@
 TRAIN:
   MAX_ITER: 10000
+DATALOADER:
+  NUM_WORKERS: 8
 MODEL:
   NAME: 'mobilenet_v2'
   IN_FEATURES: 1
@@ -14,4 +16,9 @@ OPTIMIZER:
   MOMENTUM: 0.9
 LR_SCHEDULER:
   NAME: 'multistep_lr'
-  STEP_SIZE: [2500, 6000]
+  MILESTONES: [2500, 6000]
+DATASETS:
+  TRAIN: ['FashionMNIST', 'CIFAR100']
+  TEST: ['FashionMNIST', 'CIFAR100']
+OUTPUT:
+  DIR: 'outputs/mobilenetv2'

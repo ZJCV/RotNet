@@ -9,36 +9,17 @@
 
 import numpy as np
 from PIL import Image
-from torchvision.datasets import FashionMNIST
+import torchvision.datasets as datasets
+from .base_dataset import BaseDataset
 
 
-class FMNIST(FashionMNIST):
+class FashionMNIST(BaseDataset):
+    """
+    zalandoresearch/fashion-mnist
+    https://github.com/zalandoresearch/fashion-mnist
+    """
 
     def __init__(self, data_dir, train=True, transform=None, target_transform=None, download=True):
-        super().__init__(data_dir, train, transform, target_transform, download)
+        fashionmnist = datasets.FashionMNIST(data_dir, train=train, download=download)
 
-    def __getitem__(self, index):
-        """
-        先进行图像旋转，再进行图像预处理
-        Args:
-            index (int): Index
-
-        Returns:
-            tuple: (image, target) where target is rotation angle of the image
-        """
-        img, target = self.data[index], int(self.targets[index])
-
-        if self.target_transform is not None:
-            img, target = self.target_transform(img.numpy())
-
-            # doing this so that it is consistent with all other datasets
-            # to return a PIL Image
-            img = Image.fromarray(img, mode='L')
-        else:
-            img = Image.fromarray(img.numpy(), mode='L')
-
-        if self.transform is not None:
-            img = self.transform(img)
-
-        # print(img.shape, target)
-        return img, target
+        super(FashionMNIST, self).__init__(fashionmnist, transform, target_transform)

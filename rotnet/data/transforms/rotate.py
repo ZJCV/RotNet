@@ -17,7 +17,7 @@ from rotnet.util.utils import rotate
 
 class Rotate:
 
-    def __call__(self, img: np.ndarray):
+    def __call__(self, img: np.ndarray, angle=None):
         assert isinstance(img, np.ndarray)
 
         angle = random.randint(0, 359)
