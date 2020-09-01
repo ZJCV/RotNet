@@ -11,6 +11,7 @@ _C.TRAIN.MAX_ITER = 10000
 _C.TRAIN.LOG_STEP = 10
 _C.TRAIN.SAVE_STEP = 2500
 _C.TRAIN.EVAL_STEP = 2500
+_C.TRAIN.USE_TENSORBOARD = False
 
 # ---------------------------------------------------------------------------- #
 # Test

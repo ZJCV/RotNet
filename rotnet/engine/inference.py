@@ -42,11 +42,15 @@ def inference(cfg, model, data_loader, dataset_name, device):
     for handler in logger.handlers:
         logger.removeHandler(handler)
 
+    return {dataset_name: mean_acc}
+
 
 @torch.no_grad()
 def do_evaluation(cfg, model, device):
     model.eval()
 
+    eval_results = list()
     data_loaders_val = build_dataloader(cfg, train=False)
     for dataset_name, data_loader in zip(cfg.DATASETS.TEST, data_loaders_val):
-        inference(cfg, model, data_loader, dataset_name, device)
+        eval_results.append(inference(cfg, model, data_loader, dataset_name, device))
+    return eval_results

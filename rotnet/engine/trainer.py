@@ -7,9 +7,11 @@
 @description: 
 """
 
+import os
 import datetime
 import time
 import torch
+from torch.utils.tensorboard import SummaryWriter
 
 from .inference import do_evaluation
 from rotnet.util.metrics import topk_accuracy
@@ -21,6 +23,14 @@ def do_train(cfg, arguments,
              device, logger):
     logger.info("Start training ...")
     meters = MetricLogger()
+    if cfg.TRAIN.USE_TENSORBOARD:
+        from torch.utils.tensorboard import SummaryWriter
+        summary_writer = SummaryWriter(log_dir=os.path.join(cfg.OUTPUT.DIR, 'tf_logs'))
+        # 写入模型
+        images, targets = next(iter(data_loader))
+        summary_writer.add_graph(model, images.to(device))
+    else:
+        summary_writer = None
 
     model.train()
 
@@ -70,13 +80,26 @@ def do_train(cfg, arguments,
                     mem=round(torch.cuda.max_memory_allocated() / 1024.0 / 1024.0),
                 )
             )
+            if summary_writer:
+                global_step = iteration
+                for name, meter in meters.meters.items():
+                    summary_writer.add_scalar('{}/avg'.format(name), float(meter.avg),
+                                              global_step=global_step)
+                    summary_writer.add_scalar('{}/global_avg'.format(name), meter.global_avg,
+                                              global_step=global_step)
+                summary_writer.add_scalar('lr', optimizer.param_groups[0]['lr'], global_step=global_step)
 
         if iteration % save_step == 0:
             checkpointer.save("model_{:06d}".format(iteration), **arguments)
         if eval_step > 0 and iteration % eval_step == 0 and not iteration == max_iter:
-            do_evaluation(cfg, model, device)
+            eval_results = do_evaluation(cfg, model, device)
+            if summary_writer:
+                for eval_result, dataset_name in zip(eval_results, cfg.DATASETS.TEST):
+                    summary_writer.add_scalar(dataset_name, eval_result[dataset_name], global_step=iteration)
             model.train()  # *IMPORTANT*: change to train mode after eval.
 
+    if summary_writer:
+        summary_writer.close()
     checkpointer.save("model_final", **arguments)
     # compute training time
     total_training_time = int(time.time() - start_training_time)

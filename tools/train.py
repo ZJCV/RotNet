@@ -68,10 +68,10 @@ def main():
 
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
-
     cfg.TRAIN.LOG_STEP = args.log_step
     cfg.TRAIN.SAVE_STEP = args.save_step
     cfg.TRAIN.EVAL_STEP = args.eval_step
+    cfg.TRAIN.USE_TENSORBOARD = args.use_tensorboard
     cfg.freeze()
 
     if not os.path.exists(cfg.OUTPUT.DIR):
