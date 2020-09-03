@@ -1,19 +1,28 @@
-# RotNet
+<div align="right">
+  语言:
+    🇨🇳
+  <a title="英语" href="./README.en.md">🇺🇸</a>
+  <!-- <a title="俄语" href="../ru/README.md">🇷🇺</a> -->
+</div>
 
-![](./imgs/RotNet.png)
+ <div align="center"><a title="" href="https://github.com/ZJCV/RotNet"><img align="center" src="./imgs/RotNet.png"></a></div>
 
-[![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-
-> 图像旋转矫正
+<p align="center">
+  «RotNet»实现了基于深度学习的图像旋转校正 
+<br>
+<br>
+  <a href="https://github.com/RichardLitt/standard-readme"><img src="https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square"></a>
+  <a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg"></a>
+  <a href="http://commitizen.github.io/cz-cli/"><img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg"></a>
+</p>
 
 ## 内容列表
 
-- [RotNet](#rotnet)
-  - [内容列表](#内容列表)
-  - [背景](#背景)
-  - [主要维护人员](#主要维护人员)
-  - [参与贡献方式](#参与贡献方式)
-  - [许可证](#许可证)
+- [内容列表](#内容列表)
+- [背景](#背景)
+- [主要维护人员](#主要维护人员)
+- [参与贡献方式](#参与贡献方式)
+- [许可证](#许可证)
 
 ## 背景
 
