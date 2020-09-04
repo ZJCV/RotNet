@@ -13,8 +13,8 @@ from torchvision.models import mobilenet_v2
 from rotnet.model import registry
 
 
-@registry.BACKBONES.register('mobilenet_v2')
-def build_mobilenet_v2(cfg):
+@registry.BACKBONES.register('mobilenetv2')
+def build_mobilenetv2(cfg):
     in_features = cfg.MODEL.IN_FEATURES
     num_classes = cfg.MODEL.NUM_CLASSES
     pretrained = cfg.MODEL.PRETRAINED

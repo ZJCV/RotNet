@@ -8,7 +8,7 @@
 """
 
 from . import registry
-from .models.mobilenet_v2 import build_mobilenet_v2
+from .models.mobilenet_v2 import build_mobilenetv2
 from .criterions.crossentropy import build_crossentropy
 
 

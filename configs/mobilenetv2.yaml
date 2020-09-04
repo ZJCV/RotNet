@@ -3,7 +3,7 @@ TRAIN:
 DATALOADER:
   NUM_WORKERS: 8
 MODEL:
-  NAME: 'mobilenet_v2'
+  NAME: 'mobilenetv2'
   IN_FEATURES: 1
   NUM_CLASSES: 360
   PRETRAINED: True
@@ -19,7 +19,7 @@ LR_SCHEDULER:
   GAMMA: 0.5
   MILESTONES: [20000, 55000]
 DATASETS:
-  TRAIN: ['FashionMNIST', 'CIFAR10', 'CIFAR100']
-  TEST: ['FashionMNIST', 'CIFAR10','CIFAR100']
+  TRAIN: ['FashionMNIST']
+  TEST: ['FashionMNIST']
 OUTPUT:
   DIR: 'outputs/mobilenetv2'

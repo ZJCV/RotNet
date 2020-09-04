@@ -27,7 +27,8 @@ _C.MODEL.NAME = 'mobilenet_v2'
 _C.MODEL.INPUT_SIZE = (224, 224)
 _C.MODEL.IN_FEATURES = 1
 _C.MODEL.NUM_CLASSES = 360
-_C.MODEL.PRETRAINED = True
+# 是否使用预训练模型，注意：此处作用于torch提供的ImageNet预训练模型
+_C.MODEL.PRETRAINED = False
 
 # ---------------------------------------------------------------------------- #
 # Criterion
