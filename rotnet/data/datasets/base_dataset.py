@@ -39,6 +39,9 @@ class BaseDataset:
 
         if self.target_transform is not None:
             img, target = self.target_transform(img)
+        else:
+            # 假定所有训练/测试图像的旋转角度为0
+            target = 0
 
         # doing this so that it is consistent with all other datasets
         # to return a PIL Image
