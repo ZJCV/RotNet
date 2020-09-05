@@ -16,10 +16,20 @@
   <a href="http://commitizen.github.io/cz-cli/"><img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg"></a>
 </p>
 
+* 模型：`MobileNetV2`
+* 优化器：`SGD`
+* 学习率调度器：`MultiStepLR`
+* 批量大小：`128`
+* 样本转换：缩放+颜色抖动+灰度+归一化+随机擦除+随机旋转（*随机边界值填充*）
+* 数据集：[FashionMNIST](https://github.com/zalandoresearch/fashion-mnist)
+
+使用`RTX 2080Ti`共训练`2`万轮，得到最高的测试集精度为`98.7%`，平均单次推导时间为`8ms`
+
 ## 内容列表
 
 - [内容列表](#内容列表)
 - [背景](#背景)
+- [使用](#使用)
 - [主要维护人员](#主要维护人员)
 - [参与贡献方式](#参与贡献方式)
 - [许可证](#许可证)
@@ -34,6 +44,23 @@
 * [UNSUPERVISED REPRESENTATION LEARNING BY PREDICTING IMAGE ROTATIONS](https://arxiv.org/pdf/1803.07728.pdf)
 
 其相应的实现并不能满足当前的性能要求，所以自己实现一个
+
+## 使用
+
+* 训练
+
+```
+$ export PYTHONPATH=<仓库根路径>
+$ CUDA_VISIBLE_DEVICES=0 python tools/train.py --config-file=configs/mobilenetv2.yaml
+```
+
+* 测试
+
+```
+$ export PYTHONPATH=<仓库根路径>
+$ CUDA_VISIBLE_DEVICES=0 python demo/demo.py --config-file=demo/mobilenetv2.yaml
+```
+
 ## 主要维护人员
 
 * zhujian - *Initial work* - [zjykzj](https://github.com/zjykzj)
