@@ -45,7 +45,8 @@ def run_demo(cfg, ckpt, images_dir, output_dir):
     model.eval()
     for i, image_path in enumerate(image_paths):
         start = time.time()
-        image_name = os.path.basename(image_path)
+        file_name = os.path.basename(image_path)
+        img_name = os.path.splitext(file_name)[0]
 
         image = Image.open(image_path)
         images = transform(image).unsqueeze(0)
@@ -63,24 +64,24 @@ def run_demo(cfg, ckpt, images_dir, output_dir):
                 f'predicted angle: {pred_angle}'
             ]
         )
-        print('({:04d}/{:04d}) {}: {}'.format(i + 1, len(image_paths), image_name, meters))
+        print('({:04d}/{:04d}) {}: {}'.format(i + 1, len(image_paths), file_name, meters))
 
         res_img = rotate(cv2.imread(image_path, cv2.IMREAD_UNCHANGED), -1 * pred_angle)
-        res_img_path = os.path.join(output_dir, f'{image_name}.jpg')
+        res_img_path = os.path.join(output_dir, f'{img_name}.jpg')
         cv2.imwrite(res_img_path, res_img)
 
 
 def main():
     parser = argparse.ArgumentParser(description="RotNet Demo.")
     parser.add_argument(
-        "--config-file",
+        "--config_file",
         default="",
         metavar="FILE",
         help="path to config file",
         type=str,
     )
     parser.add_argument("--ckpt", type=str, default=None, help="Trained weights.")
-    parser.add_argument("--images_dir", default='demo', type=str, help='Specify a image dir to do prediction.')
+    parser.add_argument("--images_dir", default='demo/rotate', type=str, help='Specify a image dir to do prediction.')
     parser.add_argument("--output_dir", default='demo/result', type=str,
                         help='Specify a image dir to save demo images.')
 
@@ -97,11 +98,12 @@ def main():
     cfg.merge_from_list(args.opts)
     cfg.freeze()
 
-    print("Loaded configuration file {}".format(args.config_file))
-    with open(args.config_file, "r") as cf:
-        config_str = "\n" + cf.read()
-        print(config_str)
-    print("Running with config:\n{}".format(cfg))
+    if args.config_file:
+        print("Loaded configuration file {}".format(args.config_file))
+        with open(args.config_file, "r") as cf:
+            config_str = "\n" + cf.read()
+            print(config_str)
+    # print("Running with config:\n{}".format(cfg))
 
     run_demo(cfg=cfg,
              ckpt=args.ckpt,

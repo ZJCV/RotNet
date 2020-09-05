@@ -1,0 +1,6 @@
+MODEL:
+  NAME: 'mobilenetv2'
+  IN_FEATURES: 1
+  NUM_CLASSES: 360
+OUTPUT:
+  DIR: 'outputs/mobilenetv2'
