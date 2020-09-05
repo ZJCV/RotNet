@@ -95,7 +95,7 @@ def do_train(cfg, arguments,
             eval_results = do_evaluation(cfg, model, device)
             if summary_writer:
                 for eval_result, dataset_name in zip(eval_results, cfg.DATASETS.TEST):
-                    summary_writer.add_scalar(f'loss/{dataset_name}', eval_result[dataset_name], global_step=iteration)
+                    summary_writer.add_scalar(f'eval/{dataset_name}', eval_result[dataset_name], global_step=iteration)
             model.train()  # *IMPORTANT*: change to train mode after eval.
 
     if summary_writer:

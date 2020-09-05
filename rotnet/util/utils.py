@@ -11,7 +11,7 @@ import math
 import cv2
 
 
-def rotate(img, degree):
+def rotate(img, degree, borderValue=(255, 255, 255)):
     h, w = img.shape[:2]
     center = (w // 2, h // 2)
 
@@ -21,7 +21,7 @@ def rotate(img, degree):
     matrix = cv2.getRotationMatrix2D(center, degree, 1)
     matrix[0, 2] += dst_w // 2 - center[0]
     matrix[1, 2] += dst_h // 2 - center[1]
-    dst_img = cv2.warpAffine(img, matrix, (dst_w, dst_h), borderValue=(255, 255, 255))
+    dst_img = cv2.warpAffine(img, matrix, (dst_w, dst_h), borderValue=borderValue)
 
     # imshow(img, 'src')
     # imshow(dst_img, 'dst')

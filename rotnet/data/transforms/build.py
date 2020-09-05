@@ -16,7 +16,6 @@ from .compose import Compose
 def build_transform(cfg, train=True):
     size = cfg.MODEL.INPUT_SIZE
 
-    target_transform = None
     if train:
         transform = transforms.Compose([
             transforms.Resize(size),
@@ -26,11 +25,6 @@ def build_transform(cfg, train=True):
             transforms.Normalize((0.5,), (0.5,)),
             transforms.RandomErasing()
         ])
-
-        target_transform = Compose([
-            Rotate(),
-            ToGray(),
-        ])
     else:
         transform = transforms.Compose([
             transforms.Resize(size),
@@ -38,5 +32,10 @@ def build_transform(cfg, train=True):
             transforms.ToTensor(),
             transforms.Normalize((0.5,), (0.5,)),
         ])
+    # 对测试集和训练集都进行随机旋转
+    target_transform = Compose([
+        Rotate(random=True),
+        ToGray(),
+    ])
 
     return transform, target_transform
