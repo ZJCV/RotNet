@@ -24,7 +24,8 @@ def batch_rotate(img_dir, res_dir):
         img = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
         dst, angle = model(img)
 
-        dst_img_path = os.path.join(res_dir, f'{angle}.jpg')
+        img_name = os.path.splitext(os.path.split(file_path)[1])[0]
+        dst_img_path = os.path.join(res_dir, f'{img_name}_{angle}.jpg')
         cv2.imwrite(dst_img_path, dst)
 
 
