@@ -7,7 +7,7 @@
 @description: 
 """
 
-import cv2
+import torch
 from PIL import Image
 import numpy as np
 
@@ -16,7 +16,6 @@ class BaseDataset:
 
     def __init__(self, dataset, transform=None, target_transform=None):
         self.data = dataset.data
-        self.targets = dataset.targets
         self.transform = transform
         self.target_transform = target_transform
 
@@ -24,33 +23,36 @@ class BaseDataset:
 
     def __getitem__(self, index):
         """
-        先进行图像旋转，再进行图像预处理
+        Firstly, the image is rotated, and then the image is preprocessed
         Args:
             index (int): Index
 
         Returns:
             tuple: (image, target) where target is rotation angle of the image
         """
-        img, target = self.data[index], int(self.targets[index])
-        if not isinstance(img, np.ndarray):
-            img = img.numpy()
-        if len(img.shape) == 3:
-            img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        img = self.data[index]
 
+        # Convert to numpy.ndarray
+        if isinstance(img, Image.Image):
+            img = np.array(img)
+        elif isinstance(img, torch.Tensor):
+            img = img.numpy()
+        else:
+            pass
+
+        # Perform image rotation
         if self.target_transform is not None:
             img, target = self.target_transform(img)
         else:
-            # 假定所有训练/测试图像的初始旋转角度为0
+            # Assume that the initial rotation angle of all training/test images is 0
             target = 0
 
-        # doing this so that it is consistent with all other datasets
-        # to return a PIL Image
+        # after rotate, make img become PIL Image
         img = Image.fromarray(img, mode='L')
 
         if self.transform is not None:
             img = self.transform(img)
 
-        # print(img.shape, target)
         return img, target
 
     def __len__(self):

@@ -7,35 +7,17 @@
 @description: 
 """
 
-import torchvision.transforms as transforms
+from zcls.data.transforms.build import parse_transform
+
 from .rotate import Rotate
-from .togray import ToGray
-from .compose import Compose
 
 
-def build_transform(cfg, train=True):
-    size = cfg.MODEL.INPUT_SIZE
+def build_target_transform():
+    """
+    Rotate image randomly. The test set and training set are rotated randomly
+    """
+    return Rotate(random=True)
 
-    if train:
-        transform = transforms.Compose([
-            transforms.Resize(size),
-            transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),
-            transforms.Grayscale(),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,)),
-            transforms.RandomErasing()
-        ])
-    else:
-        transform = transforms.Compose([
-            transforms.Resize(size),
-            transforms.Grayscale(),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,)),
-        ])
-    # 对测试集和训练集都进行随机旋转
-    target_transform = Compose([
-        Rotate(random=True),
-        ToGray(),
-    ])
 
-    return transform, target_transform
+def build_transform(cfg, is_train=True):
+    return parse_transform(cfg, is_train), build_target_transform()

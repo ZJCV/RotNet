@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-@date: 2020/8/27 下午9:44
+@date: 2021/3/13 下午7:09
 @file: compose.py
 @author: zj
 @description: 
@@ -10,10 +10,8 @@
 
 class Compose(object):
     """Composes several transforms together.
-
     Args:
         transforms (list of ``Transform`` objects): list of transforms to compose.
-
     Example:
         >>> transforms.Compose([
         >>>     transforms.CenterCrop(10),

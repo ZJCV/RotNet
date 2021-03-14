@@ -7,41 +7,17 @@
 @description: 
 """
 
-from torch.utils.data import ConcatDataset
-
-from rotnet.config.path_catalog import DatasetCatalog
-from .fashion_mnist import FashionMNIST
-from .cifar10 import CIFAR10
-from .cifar100 import CIFAR100
-
-_DATASETS = {
-    'FashionMNIST': FashionMNIST,
-    'CIFAR10': CIFAR10,
-    'CIFAR100': CIFAR100
-}
+from .fashionmnist import FashionMNIST
 
 
-def build_dataset(dataset_list, transform=None, target_transform=None, is_train=True):
-    assert len(dataset_list) > 0
-    datasets = []
-    for dataset_name in dataset_list:
-        data = DatasetCatalog.get(dataset_name)
-        args = data['args']
-        factory = _DATASETS[data['factory']]
+def build_dataset(cfg, transform=None, target_transform=None, is_train=True, download=True):
+    dataset_name = cfg.DATASET.NAME
+    data_dir = cfg.DATASET.DATA_DIR
 
-        args['train'] = is_train
-        args['transform'] = transform
-        args['target_transform'] = target_transform
+    if dataset_name == 'FashionMNIST':
+        dataset = FashionMNIST(data_dir, train=is_train, transform=transform, target_transform=target_transform,
+                               download=download)
+    else:
+        raise ValueError(f"the dataset {dataset_name} does not exist")
 
-        dataset = factory(**args)
-        datasets.append(dataset)
-
-    # for testing, return a list of datasets
-    if not is_train:
-        return datasets
-    # for training, return a dataset
-    dataset = datasets[0]
-    if len(datasets) > 1:
-        dataset = ConcatDataset(datasets)
-
-    return [dataset]
+    return dataset
