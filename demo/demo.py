@@ -71,9 +71,9 @@ def run_demo(cfg, images_dir, rotate_dir, output_dir):
     transform, target_transform = build_transform(cfg, is_train=False)
 
     for i, image_path in enumerate(image_paths):
-        # 先旋转图像，再进行矫正
+        # First rotate the image, then correct it
         t0 = time.time()
-        # 输入图像均转换成灰度图
+        # Input images are converted to gray scale
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
         t1 = time.time()
 
