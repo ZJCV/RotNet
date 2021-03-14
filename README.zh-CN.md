@@ -7,13 +7,12 @@
  <div align="center"><a title="" href="https://github.com/ZJCV/RotNet"><img align="center" src="./imgs/RotNet.png"></a></div>
 
 <p align="center">
-  «ZCls»实现了基于深度学习的图像旋转校正 
+  «RotNet»实现了基于深度学习的图像旋转校正 
 <br>
 <br>
   <a href="https://github.com/RichardLitt/standard-readme"><img src="https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square"></a>
   <a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg"></a>
   <a href="http://commitizen.github.io/cz-cli/"><img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg"></a>
-  <a href="https://pypi.org/project/zcls/"><img src="https://img.shields.io/badge/PYPI-zcls-brightgreen"></a>
 </p>
 
 ![](./imgs/demo.png)
