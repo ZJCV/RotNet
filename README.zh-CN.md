@@ -16,15 +16,6 @@
   <a href="https://pypi.org/project/zcls/"><img src="https://img.shields.io/badge/PYPI-zcls-brightgreen"></a>
 </p>
 
-* 模型：`MobileNetV2`
-* 优化器：`SGD`
-* 学习率调度器：`MultiStepLR`
-* 批量大小：`128`
-* 样本转换：缩放+颜色抖动+灰度+归一化+随机擦除+随机旋转（*随机边界值填充*）
-* 数据集：[FashionMNIST](https://github.com/zalandoresearch/fashion-mnist)
-
-使用`RTX 2080Ti`共训练`2`万轮，得到最高的测试集精度为`98.7%`，平均单次推导时间为`8ms`
-
 ![](./imgs/demo.png)
 
 ## 内容列表
