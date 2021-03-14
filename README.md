@@ -41,14 +41,14 @@ The corresponding implementation can't meet the current performance requirements
 
 ## Usage
 
-* 训练
+* train
 
 ```
 $ export PYTHONPATH=<root path>
 $ CUDA_VISIBLE_DEVICES=0 python tools/train.py -cfg=configs/xxx.yaml
 ```
 
-* 测试
+* test
 
 ```
 $ export PYTHONPATH=<root path>
