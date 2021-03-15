@@ -7,6 +7,7 @@
 @description: 
 """
 
+import cv2
 import torch
 from PIL import Image
 import numpy as np
@@ -15,7 +16,7 @@ import numpy as np
 class BaseDataset:
 
     def __init__(self, dataset, transform=None, target_transform=None):
-        self.data = dataset.data
+        self.dataset = dataset
         self.transform = transform
         self.target_transform = target_transform
 
@@ -30,7 +31,7 @@ class BaseDataset:
         Returns:
             tuple: (image, target) where target is rotation angle of the image
         """
-        img = self.data[index]
+        img, _ = self.dataset.__getitem__(index)
 
         # Convert to numpy.ndarray
         if isinstance(img, Image.Image):
@@ -40,6 +41,10 @@ class BaseDataset:
         else:
             pass
 
+        # Convert grayscale to color
+        if len(img.shape) == 2:
+            img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+
         # Perform image rotation
         if self.target_transform is not None:
             img, target = self.target_transform(img)
@@ -48,7 +53,7 @@ class BaseDataset:
             target = 0
 
         # after rotate, make img become PIL Image
-        img = Image.fromarray(img, mode='L')
+        img = Image.fromarray(img.astype(np.uint8))
 
         if self.transform is not None:
             img = self.transform(img)

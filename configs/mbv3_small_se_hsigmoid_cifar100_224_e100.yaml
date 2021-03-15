@@ -3,7 +3,7 @@ NUM_NODES: 1
 RANK_ID: 0
 DIST_BACKEND: "nccl"
 RNG_SEED: 1
-OUTPUT_DIR: 'outputs/mbv3_small_se_hsigmoid_fmnist_224_e100'
+OUTPUT_DIR: 'outputs/mbv3_small_se_hsigmoid_cifar100_224_e100'
 TRAIN:
   LOG_STEP: 10
   GRADIENT_ACCUMULATE_STEP: 1
@@ -13,8 +13,8 @@ TRAIN:
   RESUME: False
   USE_TENSORBOARD: True
 DATASET:
-  NAME: 'FashionMNIST'
-  DATA_DIR: './data/fashionmnist'
+  NAME: 'CIFAR100'
+  DATA_DIR: './data/cifar'
 TRANSFORM:
   TRAIN_METHODS: ('Resize', 'CenterCrop', 'ToTensor', 'Normalize')
   TEST_METHODS: ('Resize', 'CenterCrop', 'ToTensor', 'Normalize')
