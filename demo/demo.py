@@ -20,7 +20,8 @@ from PIL import Image
 
 from zcls.config import cfg
 from zcls.config.key_word import KEY_OUTPUT
-from zcls.model.recognizers.build import build_recognizer
+
+from rotnet.rotnet import rotnet
 
 from rotnet.data.transforms.build import build_transform
 from rotnet.data.transforms.rotate import rotate
@@ -64,7 +65,7 @@ def run_demo(cfg, images_dir, rotate_dir, output_dir):
         os.makedirs(output_dir)
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    model = build_recognizer(cfg, device)
+    model = rotnet(pretrained=True).to(device)
     model.eval()
 
     cpu_device = torch.device("cpu")
