@@ -20,7 +20,7 @@ from zcls.util.parser import parse_args, load_config
 from zcls.util.misc import launch_job
 from zcls.util.distributed import synchronize, init_distributed_training
 
-from rotnet.data.build import build_dataloader
+from rotnet.data.build import build_data
 
 logger = logging.get_logger(__name__)
 
@@ -41,7 +41,7 @@ def test(cfg):
     device = get_device(local_rank=local_rank_id)
     model = build_recognizer(cfg, device=device)
 
-    test_data_loader = build_dataloader(cfg, is_train=False)
+    test_data_loader = build_data(cfg, is_train=False)
 
     synchronize()
     do_evaluation(cfg, model, test_data_loader, device)

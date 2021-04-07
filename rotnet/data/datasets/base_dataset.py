@@ -12,15 +12,20 @@ import torch
 from PIL import Image
 import numpy as np
 
+from zcls.data.datasets.evaluator.general_evaluator import GeneralEvaluator
+
 
 class BaseDataset:
 
-    def __init__(self, dataset, transform=None, target_transform=None):
+    def __init__(self, dataset, transform=None, target_transform=None, top_k=(1, 5)):
         self.dataset = dataset
         self.transform = transform
         self.target_transform = target_transform
+        # 0-359 degrees
+        self.classes = [str(i) for i in range(360)]
 
         self.length = len(dataset)
+        self._update_evaluator(top_k)
 
     def __getitem__(self, index):
         """
@@ -62,3 +67,6 @@ class BaseDataset:
 
     def __len__(self):
         return self.length
+
+    def _update_evaluator(self, top_k=(1,)):
+        self.evaluator = GeneralEvaluator(self.classes, top_k=top_k)

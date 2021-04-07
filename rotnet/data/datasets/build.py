@@ -7,31 +7,31 @@
 @description: 
 """
 
-from .fashionmnist import FashionMNIST
 from .cifar import CIFAR
+from .fashionmnist import FashionMNIST
 from .svhn import SVHN
-from .concat import Concat
+from .general_dataset import GeneralDataset
 
 
-def build_dataset(cfg, transform=None, target_transform=None, is_train=True, download=True):
+def build_dataset(cfg, transform=None, target_transform=None, is_train=True):
     dataset_name = cfg.DATASET.NAME
-    data_dir = cfg.DATASET.DATA_DIR
+    data_root = cfg.DATASET.TRAIN_ROOT if is_train else cfg.DATASET.TEST_ROOT
+    top_k = cfg.DATASET.TOP_K
 
-    if dataset_name == 'FashionMNIST':
-        dataset = FashionMNIST(data_dir, train=is_train, transform=transform, target_transform=target_transform,
-                               download=download)
-    elif dataset_name == 'CIFAR100':
-        dataset = CIFAR(data_dir, train=is_train, transform=transform, target_transform=target_transform,
-                        download=download, is_cifar100=True)
+    if dataset_name == 'CIFAR100':
+        dataset = CIFAR(data_root, train=is_train, transform=transform, target_transform=target_transform,
+                        top_k=top_k, is_cifar100=True)
     elif dataset_name == 'CIFAR10':
-        dataset = CIFAR(data_dir, train=is_train, transform=transform, target_transform=target_transform,
-                        download=download, is_cifar100=False)
+        dataset = CIFAR(data_root, train=is_train, transform=transform, target_transform=target_transform,
+                        top_k=top_k, is_cifar100=False)
+    elif dataset_name == 'FashionMNIST':
+        dataset = FashionMNIST(data_root, train=is_train, transform=transform, target_transform=target_transform,
+                               top_k=top_k)
     elif dataset_name == 'SVHN':
-        dataset = SVHN(data_dir, train=is_train, transform=transform, target_transform=target_transform,
-                       download=download)
-    elif dataset_name == 'Concat':
-        dataset = Concat(data_dir, train=is_train, transform=transform, target_transform=target_transform,
-                         download=download)
+        dataset = SVHN(data_root, train=is_train, transform=transform, target_transform=target_transform,
+                       top_k=top_k)
+    elif dataset_name == 'GeneralDataset':
+        dataset = GeneralDataset(data_root, transform=transform, target_transform=target_transform, top_k=top_k)
     else:
         raise ValueError(f"the dataset {dataset_name} does not exist")
 

@@ -23,7 +23,7 @@ from zcls.util.distributed import init_distributed_training, get_device, get_loc
 from zcls.util.misc import launch_job
 from zcls.util.parser import parse_args, load_config
 
-from rotnet.data.build import build_dataloader
+from rotnet.data.build import build_data
 
 logger = logging.get_logger(__name__)
 
@@ -69,8 +69,8 @@ def train(cfg):
                 logger.info('warmup end')
         logger.info('resume end')
 
-    train_data_loader = build_dataloader(cfg, is_train=True)
-    test_data_loader = build_dataloader(cfg, is_train=False)
+    train_data_loader = build_data(cfg, is_train=True)
+    test_data_loader = build_data(cfg, is_train=False)
 
     logger.info('init end')
     synchronize()

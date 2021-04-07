@@ -10,22 +10,17 @@
 import torchvision.datasets as datasets
 
 from .base_dataset import BaseDataset
-from zcls.data.datasets.evaluator.general_evaluator import GeneralEvaluator
 
 
 class SVHN(BaseDataset):
 
-    def __init__(self, root, train=True, transform=None, target_transform=None,
-                 download=False):
+    def __init__(self, root, train=True, transform=None, target_transform=None, top_k=(1, 5)):
+        self.root = root
+
         split_name = 'train' if train else 'test'
-        self.data_set = datasets.SVHN(root, split=split_name, download=download)
-        # 0-359 degrees
-        self.classes = [str(i) for i in range(360)]
-        self.data_set.classes = self.classes
+        data_set = datasets.SVHN(root, split=split_name, download=True)
 
-        self._update_evaluator()
+        super(SVHN, self).__init__(data_set, transform, target_transform, top_k)
 
-        super(SVHN, self).__init__(self.data_set, transform=transform, target_transform=target_transform)
-
-    def _update_evaluator(self):
-        self.evaluator = GeneralEvaluator(self.classes, topk=(1, 5))
+    def __repr__(self):
+        return self.__class__.__name__ + ' (' + self.root + ')'
