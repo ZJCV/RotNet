@@ -21,7 +21,10 @@
 
 - [Table of Contents](#table-of-contents)
 - [Background](#background)
+- [Installation](#installation)
 - [Usage](#usage)
+  - [How to use](#how-to-use)
+  - [How to add dataset](#how-to-add-dataset)
 - [Maintainers](#maintainers)
 - [Thanks](#thanks)
 - [Contributing](#contributing)
