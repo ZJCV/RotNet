@@ -38,7 +38,15 @@ Looking for information on the Internet, we found that the image rotation angle 
 
 The corresponding implementation can't meet the current performance requirements, so I implement one myself
 
+## Installation
+
+```angular2html
+$ pip install -r requirements.txt
+```
+
 ## Usage
+
+### How to use
 
 * train
 
@@ -52,6 +60,30 @@ $ CUDA_VISIBLE_DEVICES=0 python tools/train.py -cfg=configs/xxx.yaml
 ```
 $ export PYTHONPATH=<root path>
 $ CUDA_VISIBLE_DEVICES=0 python demo/demo.py -cfg=demo/xxx.yaml
+```
+
+### How to add dataset
+
+Suppose your dataset is in the following format
+
+```
+root/dog/xxx.png
+root/dog/xxy.png
+root/dog/xxz.png
+
+root/cat/123.png
+root/cat/nsdf3.png
+root/cat/asd932_.png
+```
+
+modify config_file like this
+
+```
+DATASET:
+  NAME: 'GeneralDataset'
+  TRAIN_ROOT: /path/to/train_root
+  TEST_ROOT: /path/to/test_root
+  TOP_K: (1, 5)
 ```
 
 ## Maintainers

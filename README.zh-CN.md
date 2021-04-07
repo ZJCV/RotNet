@@ -38,20 +38,52 @@
 
 其相应的实现并不能满足当前的性能要求，所以自己实现一个
 
-## 使用
+## 安装
+
+```angular2html
+$ pip install -r requirements.txt
+```
+
+## 用法
+
+### 如何操作
 
 * 训练
 
 ```
-$ export PYTHONPATH=<仓库根路径>
+$ export PYTHONPATH=<root path>
 $ CUDA_VISIBLE_DEVICES=0 python tools/train.py -cfg=configs/xxx.yaml
 ```
 
 * 测试
 
 ```
-$ export PYTHONPATH=<仓库根路径>
+$ export PYTHONPATH=<root path>
 $ CUDA_VISIBLE_DEVICES=0 python demo/demo.py -cfg=demo/xxx.yaml
+```
+
+### 如何添加数据集
+
+假定数据集格式按以下方式排列：
+
+```
+root/dog/xxx.png
+root/dog/xxy.png
+root/dog/xxz.png
+
+root/cat/123.png
+root/cat/nsdf3.png
+root/cat/asd932_.png
+```
+
+修改配置文件如下：
+
+```
+DATASET:
+  NAME: 'GeneralDataset'
+  TRAIN_ROOT: /path/to/train_root
+  TEST_ROOT: /path/to/test_root
+  TOP_K: (1, 5)
 ```
 
 ## 主要维护人员
